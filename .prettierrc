@@ -1,0 +1,12 @@
+{
+  "bracketSpacing": true,
+  "bracketSameLine": true,
+  "endOfLine": "lf",
+  "printWidth": 120,
+  "semi": true,
+  "tabWidth": 2,
+  "singleAttributePerLine": true,
+  "useTabs": false,
+  "htmlWhitespaceSensitivity": "css",
+  "trailingComma": "none"
+}

@@ -1,0 +1,78 @@
+{
+  "name": "trim-automator",
+  "version": "1.0.1",
+  "main": "app/main.js",
+  "repository": "git@github.com:howling-hood/trim-automator.git",
+  "license": "MIT",
+  "author": {
+    "email": "karthik@rodhrahrohin.com",
+    "name": "Karthik Koppaka"
+  },
+  "homepage": "./",
+  "description": "A simple tool to automate repetitive tasks when content creators are in the trimming process of contents",
+  "scripts": {
+    "dev": "concurrently -k \"yarn dev:ui\" \"yarn dev:app\"",
+    "dev:app": "wait-on tcp:3030 && electronmon .",
+    "dev:ui": "cross-env BROWSER=none PORT=3030 react-scripts start",
+    "format": "prettier --write *",
+    "format:check": "prettier --check *",
+    "lint": "yarn eslint --fix .",
+    "lint:check": "yarn eslint .",
+    "test": "yarn test:ui",
+    "test:ui": "react-scripts test",
+    "prebuild": "yarn pre:clean",
+    "build": "yarn build:ui && yarn build:app",
+    "build:ui": "BUILD_PATH='./build/ui' react-scripts build",
+    "prebuild:app": "yarn pre:copy && yarn pre:install",
+    "build:app": "yarn build:app:win && yarn build:app:mac",
+    "build:app:win": "electron-builder --win --x64",
+    "build:app:mac": "cross-env DEBUG=electron-builder electron-builder --mac --x64",
+    "build:check": "cd dist/mac/Trim\\ Automator.app/Contents/Resources/ && npx @electron/asar extract app.asar ../../../../unpackedasar",
+    "pre:clean": "npx rimraf dist build",
+    "pre:install": "cd build && yarn --prod",
+    "pre:copy": "copyfiles package.json ./app/** ./common/** ./build/"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.1.0",
+    "@testing-library/user-event": "^13.2.1",
+    "concurrently": "^9.1.2",
+    "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "electron": "35.0.3",
+    "electron-builder": "^25.1.8",
+    "electronmon": "^2.0.3",
+    "eslint": "^9.23.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.8",
+    "electron-is-dev": "^3.0.1",
+    "electron-squirrel-startup": "^1.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

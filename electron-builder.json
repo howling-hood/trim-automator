@@ -1,0 +1,11 @@
+{
+  "extends": null,
+  "appId": "app.rodhrahrohin.trim-automator",
+  "productName": "Trim Automator",
+  "asar": true,
+  "directories": {
+    "app": "build",
+    "buildResources": "assets",
+    "output": "dist"
+  }
+}
