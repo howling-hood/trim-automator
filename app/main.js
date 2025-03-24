@@ -1,5 +1,3 @@
-import path from "node:path";
-
 import { app, BrowserWindow } from "electron";
 
 import isDev from "electron-is-dev";
@@ -11,9 +9,9 @@ const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     title: "Trim Automator",
-    width: 800,
-    height: 600,
-    backgroundColor: "#312450",
+    width: 480,
+    height: 1080,
+    backgroundColor: "#11171d",
     webPreferences: {
       devTools: true,
       nodeIntegration: true
