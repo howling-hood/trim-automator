@@ -11,7 +11,7 @@ const createWindow = () => {
     title: "Trim Automator",
     width: 480,
     height: 1080,
-    backgroundColor: "#11171d",
+    backgroundColor: "#FFFFFF",
     webPreferences: {
       devTools: true,
       nodeIntegration: true
