@@ -10,7 +10,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     title: "Trim Automator",
     width: 480,
-    height: 1080,
+    height: 720,
     backgroundColor: "#FFFFFF",
     webPreferences: {
       devTools: true,

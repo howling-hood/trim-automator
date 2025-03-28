@@ -46,7 +46,6 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
         <Grid size={4}>
           <Typography
             variant="caption"
-            component={"p"}
             sx={{
               fontSize: 10
             }}>
@@ -64,7 +63,6 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
         <Grid size={4}>
           <Typography
             variant="caption"
-            component={"p"}
             sx={{
               fontSize: 10
             }}>
@@ -81,7 +79,6 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
         <Grid size={4}>
           <Typography
             variant="caption"
-            component={"p"}
             sx={{
               fontSize: 10
             }}>

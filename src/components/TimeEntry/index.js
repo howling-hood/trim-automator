@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Check, Close, Delete } from "@mui/icons-material";
-import { Divider, Fab, Grid2 as Grid, Snackbar, Typography } from "@mui/material";
+import { Divider, Fab, Grid2 as Grid, Snackbar } from "@mui/material";
 
 import TimeInput from "../TimeInput";
 

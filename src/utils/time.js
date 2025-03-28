@@ -11,7 +11,8 @@ export const timeReduction = (times = []) => {
   const sortedTimes = times.sort((a, b) => a[0] - b[0]);
   let newTimes = [];
   let mergedTill = -1;
-  for (let primary = 0; primary < sortedTimes.length - 1; primary++) {
+  // 0,1,0
+  for (let primary = 0; primary < sortedTimes.length; primary++) {
     // skip the iteration if we have merged ahead
     if (mergedTill >= primary) {
       continue;
@@ -20,6 +21,7 @@ export const timeReduction = (times = []) => {
     let entryEnd = sortedTimes[primary][1];
 
     // start checking from the next entry
+    // 1,2,0
     for (let secondary = primary + 1; secondary < sortedTimes.length; secondary++) {
       if (
         // if the current end time is near threshold secs of start time of next entry merge it
