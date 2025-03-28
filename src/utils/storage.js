@@ -8,3 +8,8 @@ export const store = (key, value) => {
   if (!value) throw Error("Value/Data needed for storage");
   localStorage.setItem(key, JSON.stringify(value));
 };
+
+export const remove = (key) => {
+  if (!key) throw Error("Key needed for removal");
+  localStorage.removeItem(key);
+};

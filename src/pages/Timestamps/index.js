@@ -5,7 +5,7 @@ import { IconButton, Tab, Tabs, Tooltip, Typography } from "@mui/material";
 
 import TimeDetails from "../../components/TimeDetails";
 import TabNameDialog from "../../components/TabNameDialog";
-import { retrieve, store } from "../../utils/storage";
+import { remove, retrieve, store } from "../../utils/storage";
 
 const TimestampPage = () => {
   const pageKey = "TimestampPage/";
@@ -34,6 +34,7 @@ const TimestampPage = () => {
     setTabList((tabs) => {
       const filtered = tabs.filter((tab) => tab !== label);
       setSelected(filtered[0] ?? "adder-tab");
+      remove(`${label}/data`);
       return filtered;
     });
   };
