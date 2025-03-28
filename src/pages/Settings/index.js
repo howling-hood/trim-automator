@@ -1,23 +1,28 @@
-import { Button, FormGroup, Stack, TextField, Typography } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 import { store } from "../../utils/storage";
-import { DAVINCI_LABELS, SETTINGS } from "../../utils/configs";
+import { DAVINCI_LABELS, ROUTES, SETTINGS } from "../../utils/configs";
+import ShortcutInput from "../../components/ShortcutInput";
 
 const SettingsPage = () => {
-  const [settings, setSettings] = useState(SETTINGS);
   const [threshold, setThreshold] = useState(SETTINGS.threshold);
   const [davinci, setDavinci] = useState(SETTINGS.davinci);
   const [processing, setProcessing] = useState(false);
+  const [listen, setListener] = useState("");
 
   const handleSubmit = () => {
-    store("Settings", settings);
-  };
-
-  const handleShortcut = (keyToChange) => {
-    // TO DO
-    // ask the user for a keyboard shortcut input here and store the value in the below state set call
-    setDavinci((dav) => ({ ...dav, [keyToChange]: "" }));
+    const dv = Object.values(davinci);
+    if (dv.length !== Object.keys(DAVINCI_LABELS).length || dv.filter((davinciItem) => davinciItem === "").length) {
+      alert("Please fill in all shortcuts");
+      return;
+    }
+    const settings = {
+      threshold,
+      davinci
+    };
+    store(ROUTES.settings, settings);
+    // send to the backend to save the config locally
   };
 
   return (
@@ -45,10 +50,16 @@ const SettingsPage = () => {
           variant="filled"
           value={davinciItem[1]}
           onClick={() => {
-            handleShortcut(davinciItem[0]);
+            setListener(davinciItem[0]);
           }}
         />
       ))}
+      <Typography
+        color="info"
+        variant="caption">
+        Do not use shortcuts with Enter or fn key in them.
+        <br /> mostly try to setup the above shortcuts with the space,shift,ctrl, alt + alphanumeric keys
+      </Typography>
       <Button
         disabled={processing}
         variant="contained"
@@ -56,6 +67,13 @@ const SettingsPage = () => {
         onClick={handleSubmit}>
         Update Settings
       </Button>
+      <ShortcutInput
+        isOpen={listen !== ""}
+        onSubmit={(key) => {
+          setDavinci((dav) => ({ ...dav, [listen]: key }));
+          setListener("");
+        }}
+      />
     </Stack>
   );
 };
