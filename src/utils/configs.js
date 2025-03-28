@@ -6,21 +6,22 @@ export const ROUTES = {
   davinci: "/davinci"
 };
 
-export const SETTINGS = retrieve("SETTINGS") || {
+export const SETTINGS = retrieve(ROUTES.settings) || {
   davinci: {
     timecode: "",
-    blade: "",
-    mark: "",
-    deliver: "",
-    queue: ""
+    blade: ""
   },
   threshold: 30
 };
 
 export const DAVINCI_LABELS = {
   timecode: "Shortcut for Timecode",
-  blade: "Shortcut for adding a Cut",
-  mark: "Shortcut for Marking",
-  deliver: "Shortcut for activating the deliver page",
-  queue: "Shorcut for adding to render queue"
+  blade: "Shortcut for adding a Cut"
+};
+
+export const KEYMAPPING = {
+  "⌃": "Ctrl",
+  "⇧": "Shift",
+  "⌥": "Alt",
+  space: "Space"
 };

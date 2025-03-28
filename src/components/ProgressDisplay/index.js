@@ -3,11 +3,8 @@ import { Alert, Button, Divider, LinearProgress, Stack } from "@mui/material";
 import React, { useState } from "react";
 
 const ProgressDisplay = ({ setIsProcessing }) => {
-  const [items, setItems] = useState([
-    { type: "success", text: "test1" },
-    { type: "warning", text: "test2" }
-  ]);
-  const [current, setCurrent] = useState("Setting Up...");
+  const [items, setItems] = useState([]);
+  const [current, setCurrent] = useState("");
   const [progress, setProgress] = useState(0);
   const [stoppable, setStoppable] = useState(true);
 
