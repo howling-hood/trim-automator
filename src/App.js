@@ -2,9 +2,10 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import Header from "./components/Header";
-import Gather from "./pages/Gather";
-import Reduce from "./pages/Reduce";
-import Cutter from "./pages/Cutter";
+import Settings from "./pages/Settings";
+import Timestamps from "./pages/Timestamps";
+import Davinci from "./pages/Davinci";
+import { ROUTES } from "./utils/configs";
 
 function App() {
   return (
@@ -12,19 +13,24 @@ function App() {
       <Header />
       <Routes>
         <Route
-          path="/"
+          path={ROUTES.timestamps}
           exact
-          Component={Gather}
+          Component={Timestamps}
         />
         <Route
-          path="/reduce"
+          path={ROUTES.timestamps}
           exact
-          Component={Reduce}
+          Component={Timestamps}
         />
         <Route
-          path="/cutter"
+          path={ROUTES.davinci}
           exact
-          Component={Cutter}
+          Component={Davinci}
+        />
+        <Route
+          path={ROUTES.settings}
+          exact
+          Component={Settings}
         />
       </Routes>
     </Router>
