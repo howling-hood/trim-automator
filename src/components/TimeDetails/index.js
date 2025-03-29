@@ -15,12 +15,12 @@ const TimeDetails = ({ selected, pageKey }) => {
 
   useEffect(() => {
     store(sectionKey, data);
+    setDisplayDuration(calculateTotalDuration(data));
   }, [data]);
 
   const handleAdd = (values) => {
     setData((newData) => {
       const filteredList = timeReduction([...newData, values]);
-      setDisplayDuration(calculateTotalDuration(filteredList));
       return filteredList;
     });
     window.location.reload();
