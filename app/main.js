@@ -16,14 +16,13 @@ const createWindow = () => {
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
-      preload: path.join(path.resolve(), isProd ? "" : "app", "preload.js"),
+      preload: path.join(path.resolve(), "preload.js"),
       contextIsolation: true
     }
   });
 
   if (isProd) {
     mainWindow.loadFile("ui/index.html");
-    mainWindow.webContents.openDevTools();
     return;
   }
   mainWindow.webContents.openDevTools();
