@@ -22,7 +22,7 @@
     "test:ui": "react-scripts test",
     "prebuild": "yarn pre:clean",
     "build": "yarn build:ui && yarn build:app",
-    "build:ui": "BUILD_PATH='./build/ui' react-scripts build",
+    "build:ui": "cross-env BUILD_PATH='./build/ui' react-scripts build",
     "prebuild:app": "yarn pre:copy && yarn pre:install",
     "build:app": "yarn build:app:win && yarn build:app:mac",
     "build:app:win": "electron-builder --win --x64",
@@ -30,7 +30,7 @@
     "build:check": "cd dist/mac/Trim\\ Automator.app/Contents/Resources/ && npx @electron/asar extract app.asar ../../../../unpackedasar",
     "pre:clean": "npx rimraf dist build",
     "pre:install": "cd build && yarn --prod",
-    "pre:copy": "copyfiles package.json ./app/** ./common/** ./build/"
+    "pre:copy": "copyfiles package.json ./app/** ./build/"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",
@@ -69,9 +69,6 @@
   },
   "electronmon": {
     "patterns": [
-      "app/**",
-      "src/**",
-      "public/**",
       "!data/**"
     ]
   },
