@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { retrieve } from "../../utils/storage";
 import { Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
-import { beginProcess } from "../../utils/processing";
 import LoadingCircle from "../LoadingCircle";
 
 const checklist = [
@@ -31,10 +30,9 @@ const FormDisplay = ({ setIsProcessing }) => {
     setupSection();
   }, []);
 
-  const handleSubmit = () => {
-    // send backend the times and set processing to true
-    beginProcess(times, id);
+  const handleSubmit = async () => {
     setIsProcessing(true);
+    window.processor.initiate(times);
   };
 
   return loading ? (
@@ -70,7 +68,7 @@ const FormDisplay = ({ setIsProcessing }) => {
 
       <br />
       <Button
-        disabled={total !== checklist.length}
+        disabled={!(total !== checklist.length || id.trim() === "")}
         variant="contained"
         onClick={handleSubmit}>
         Begin Process

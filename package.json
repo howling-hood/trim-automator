@@ -58,6 +58,7 @@
     "@mui/icons-material": "^6.4.8",
     "@mui/material": "^6.4.8",
     "electron-is-dev": "^3.0.1",
+    "electron-main-window": "^1.0.4",
     "electron-squirrel-startup": "^1.0.1",
     "hotkeys-js": "^3.13.9",
     "react": "^19.0.0",

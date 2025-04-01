@@ -1,4 +1,4 @@
-import { SETTINGS } from "./configs";
+import { SETTINGS } from "./configs.js";
 
 const secsInHours = 60 * 60;
 const secsInMins = 60;

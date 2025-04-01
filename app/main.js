@@ -1,7 +1,7 @@
-import { app, BrowserWindow } from "electron/main";
+import { app, BrowserWindow } from "electron";
 import path from "node:path";
 import isDev from "electron-is-dev";
-import setupHandlers from "./utils/handlers.js";
+import setupHandlers from "./handlers.js";
 
 const prodEnv = Boolean(process.env.NODE_ENV === "production");
 const isProd = !isDev || prodEnv || app.isPackaged;
@@ -20,8 +20,6 @@ const createWindow = () => {
       contextIsolation: true
     }
   });
-
-  // console.log("testsasdfsdf", );
 
   if (isProd) {
     mainWindow.loadFile("ui/index.html");
