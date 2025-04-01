@@ -1,3 +1,5 @@
+const { Key } = require("@nut-tree-fork/nut-js");
+
 const processor = {
   initiate: "processor:initiate"
 };
@@ -21,9 +23,17 @@ const eventList = {
   onEndProcess: "onEndProcess"
 };
 
+const keyMapping = {
+  CTRL: Key.LeftControl,
+  SHIFT: Key.Shift,
+  ALT: Key.LeftAlt,
+  SPACE: Key.Space
+};
+
 // needs to use the module.exports
 module.exports = {
   fileStorage,
   eventList,
-  processor
+  processor,
+  keyMapping
 };

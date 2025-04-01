@@ -16,7 +16,7 @@ const createWindow = () => {
     webPreferences: {
       devTools: true,
       nodeIntegration: true,
-      preload: path.join(path.resolve(), "preload.js"),
+      preload: path.join(path.resolve(), "app", "preload.js"),
       contextIsolation: true
     }
   });
@@ -25,7 +25,7 @@ const createWindow = () => {
     mainWindow.loadFile("ui/index.html");
     return;
   }
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
   mainWindow.loadURL("http://localhost:3030");
   return;
 };
