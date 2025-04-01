@@ -1,8 +1,7 @@
-import { ipcMain } from "electron/main";
+import { ipcMain } from "electron";
 
-import { fileStorage } from "../const.js";
-
-import { clearFile, retrieveFile, storeFile } from "./storage.js";
+import { fileStorage } from "../utils/const.js";
+import { clearFile, retrieveFile, storeFile } from "../utils/storage.js";
 
 const setupStorageHandlers = () => {
   ipcMain.handle(fileStorage.clearFile, (_, key) => clearFile(key));
@@ -10,8 +9,4 @@ const setupStorageHandlers = () => {
   ipcMain.handle(fileStorage.storeFile, (_, key, data) => storeFile(key, data));
 };
 
-const setupHandlers = () => {
-  setupStorageHandlers();
-};
-
-export default setupHandlers;
+export default setupStorageHandlers;

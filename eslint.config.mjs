@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 
 export default defineConfig([
   {
-    ignores: ["**/build/", "**/dist/", "**/coverage/", "**/node_modules/"]
+    ignores: ["**/build/", "**/data/", "**/dist/", "**/coverage/", "**/node_modules/"]
   },
   {
     files: ["./src/*.{js,mjs,cjs,jsx}", "./public/*.{js,mjs,cjs,jsx}"],
