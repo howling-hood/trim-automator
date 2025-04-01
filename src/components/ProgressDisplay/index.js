@@ -1,32 +1,30 @@
 /* eslint-disable react/prop-types */
 import { Alert, Button, Divider, LinearProgress, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import LoadingCircle from "../LoadingCircle";
 
 const ProgressDisplay = ({ setIsProcessing }) => {
   const [items, setItems] = useState([]);
   const [current, setCurrent] = useState("");
   const [progress, setProgress] = useState(0);
   const [stoppable, setStoppable] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const handleStoppage = () => {
     setIsProcessing(false);
   };
 
-  //   Node side event listeners
+  const setupListeners = () => {
+    setLoading(false);
+  };
+  useEffect(() => {
+    setupListeners();
+  }, []);
 
-  return (
+  return loading ? (
+    <LoadingCircle />
+  ) : (
     <Stack spacing={2}>
-      <Divider />
-      {items.map((item, index) => (
-        <Alert
-          key={index}
-          severity={item.type}>
-          {item.text}
-        </Alert>
-      ))}
-      <Divider />
-      <Alert severity="info">{current}</Alert>
-      <LinearProgress value={progress} />
       <Divider />
       <Button
         variant="contained"
@@ -35,6 +33,17 @@ const ProgressDisplay = ({ setIsProcessing }) => {
         disabled={!stoppable}>
         Stop Process
       </Button>
+      <Divider />
+      <Alert severity="info">{current}</Alert>
+      <LinearProgress value={progress} />
+      <Divider />
+      {items.reverse().map((item, index) => (
+        <Alert
+          key={index}
+          severity={item.type}>
+          {item.text}
+        </Alert>
+      ))}
     </Stack>
   );
 };

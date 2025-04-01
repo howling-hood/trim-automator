@@ -1,15 +1,13 @@
-import { retrieve } from "./storage";
-
 export const ROUTES = {
   timestamps: "/",
   settings: "/settings",
   davinci: "/davinci"
 };
 
-export const SETTINGS = retrieve(ROUTES.settings) || {
+export const SETTINGS = {
   davinci: {
-    timecode: "",
-    blade: ""
+    timecode: "=",
+    blade: "CTRL+B"
   },
   threshold: 30
 };

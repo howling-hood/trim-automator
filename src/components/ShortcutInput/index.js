@@ -11,10 +11,7 @@ const ShortcutInput = ({ isOpen, onSubmit }) => {
     setShortcut(
       hotkeys
         .getPressedKeyString()
-        .map((key) => {
-          console.log(key);
-          return KEYMAPPING[key] || key;
-        })
+        .map((key) => KEYMAPPING[key] || key)
         .reverse()
         .join("+")
     );

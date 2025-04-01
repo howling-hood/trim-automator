@@ -66,6 +66,14 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.0"
   },
+  "electronmon": {
+    "patterns": [
+      "app/**",
+      "src/**",
+      "public/**",
+      "!data/**"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
