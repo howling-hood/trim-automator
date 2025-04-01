@@ -6,7 +6,6 @@ keyboard.config.autoDelayMs = 200;
 const getMappedShortcut = (shortcut) =>
   shortcut.split("+").map((k) => {
     let ky = k.toUpperCase();
-    console.log("jere", ky, Key[ky], keyMapping[ky], shortcut);
     return Key[ky] || keyMapping[ky] || ky;
   });
 
