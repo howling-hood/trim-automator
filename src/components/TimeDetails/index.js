@@ -7,30 +7,54 @@ import { calculateTotalDuration, timeReduction } from "../../utils/time";
 import TimeEntry from "../TimeEntry";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/configs";
+import LoadingCircle from "../LoadingCircle";
 
 const TimeDetails = ({ selected, pageKey }) => {
   const sectionKey = pageKey + "/data";
-  const [data, setData] = useState(retrieve(sectionKey) || []);
-  const [displayDuration, setDisplayDuration] = useState(calculateTotalDuration(data));
+  const [data, setData] = useState([]);
+  const [displayDuration, setDisplayDuration] = useState("00:00:00");
+  const [loading, setLoading] = useState(false);
+
+  const setupSection = async () => {
+    const data = (await retrieve(sectionKey)) || [];
+    setData(data);
+    setDisplayDuration(calculateTotalDuration(data));
+    setLoading(false);
+  };
 
   useEffect(() => {
-    store(sectionKey, data);
-    setDisplayDuration(calculateTotalDuration(data));
-  }, [data]);
+    setupSection();
+  }, []);
 
-  const handleAdd = (values) => {
-    setData((newData) => {
-      const filteredList = timeReduction([...newData, values]);
-      return filteredList;
-    });
+  const onDataUpdate = (newData) => {
+    store(sectionKey, newData);
+    setDisplayDuration(calculateTotalDuration(newData));
     window.location.reload();
   };
 
-  const handleDelete = (index) => {
-    setData((newData) => newData.filter((e, i) => i !== index));
+  const handleAdd = (values) => {
+    setLoading(true);
+    setData((newData) => {
+      const filteredList = timeReduction([...newData, values]);
+      onDataUpdate(filteredList);
+      return filteredList;
+    });
+    setLoading(false);
   };
 
-  return (
+  const handleDelete = (index) => {
+    setLoading(true);
+    setData((newData) => {
+      const filteredList = newData.filter((e, i) => i !== index);
+      onDataUpdate(filteredList);
+      return filteredList;
+    });
+    setLoading(false);
+  };
+
+  return loading && selected ? (
+    <LoadingCircle />
+  ) : (
     <div
       style={{ width: "100%" }}
       role="tabpanel"

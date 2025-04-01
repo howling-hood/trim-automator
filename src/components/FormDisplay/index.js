@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { retrieve } from "../../utils/storage";
 import { Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
+import { beginProcess } from "../../utils/processing";
+import LoadingCircle from "../LoadingCircle";
 
 const checklist = [
   "Do the shortcuts in Davinci Resolve and this app match?",
@@ -12,17 +14,32 @@ const checklist = [
 ];
 
 const FormDisplay = ({ setIsProcessing }) => {
-  const selectedTab = retrieve("TimestampPage/selected");
-  const times = retrieve(selectedTab + "/data");
+  const [selectedTab, setSelectedTab] = useState("");
+  const [times, setTimes] = useState([]);
   const [total, setTotal] = useState(0);
   const [id, setId] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const setupSection = async () => {
+    const selection = await retrieve("TimestampPage/selected");
+    setSelectedTab(selection);
+    setTimes(await retrieve(selection + "/data"));
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    setupSection();
+  }, []);
 
   const handleSubmit = () => {
     // send backend the times and set processing to true
+    beginProcess(times, id);
     setIsProcessing(true);
   };
 
-  return (
+  return loading ? (
+    <LoadingCircle />
+  ) : (
     <Stack spacing={2}>
       <Typography
         variant="h6"

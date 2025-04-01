@@ -1,15 +1,27 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { store } from "../../utils/storage";
+import { retrieve, store } from "../../utils/storage";
 import { DAVINCI_LABELS, ROUTES, SETTINGS } from "../../utils/configs";
 import ShortcutInput from "../../components/ShortcutInput";
+import LoadingCircle from "../../components/LoadingCircle";
 
 const SettingsPage = () => {
-  const [threshold, setThreshold] = useState(SETTINGS.threshold);
-  const [davinci, setDavinci] = useState(SETTINGS.davinci);
-  const [processing, setProcessing] = useState(false);
+  const [threshold, setThreshold] = useState(0);
+  const [davinci, setDavinci] = useState({});
   const [listen, setListener] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const setupPage = async () => {
+    const settings = (await retrieve(ROUTES.settings)) || SETTINGS;
+    setThreshold(settings.threshold);
+    setDavinci(settings.davinci);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    setupPage();
+  }, []);
 
   const handleSubmit = () => {
     const dv = Object.values(davinci);
@@ -17,15 +29,15 @@ const SettingsPage = () => {
       alert("Please fill in all shortcuts");
       return;
     }
-    const settings = {
+    store(ROUTES.settings, {
       threshold,
       davinci
-    };
-    store(ROUTES.settings, settings);
-    // send to the backend to save the config locally
+    });
   };
 
-  return (
+  return loading ? (
+    <LoadingCircle />
+  ) : (
     <Stack spacing={2}>
       <Typography
         variant="h5"
@@ -33,7 +45,6 @@ const SettingsPage = () => {
         Settings
       </Typography>
       <TextField
-        disabled={processing}
         label="Difference threshold in secs"
         variant="filled"
         value={threshold}
@@ -45,7 +56,6 @@ const SettingsPage = () => {
       {Object.entries(davinci).map((davinciItem) => (
         <TextField
           key={davinciItem[0]}
-          disabled={processing}
           label={DAVINCI_LABELS[davinciItem[0]]}
           variant="filled"
           value={davinciItem[1]}
@@ -61,7 +71,6 @@ const SettingsPage = () => {
         <br /> mostly try to setup the above shortcuts with the space,shift,ctrl, alt + alphanumeric keys
       </Typography>
       <Button
-        disabled={processing}
         variant="contained"
         fullWidth
         onClick={handleSubmit}>

@@ -6,19 +6,32 @@ import { IconButton, Tab, Tabs, Tooltip, Typography } from "@mui/material";
 import TimeDetails from "../../components/TimeDetails";
 import TabNameDialog from "../../components/TabNameDialog";
 import { remove, retrieve, store } from "../../utils/storage";
+import LoadingCircle from "../../components/LoadingCircle";
 
 const TimestampPage = () => {
   const pageKey = "TimestampPage/";
-  const [tabList, setTabList] = useState(retrieve(pageKey + "tabs") ?? ["laughs", "smiles"]);
-  const [selected, setSelected] = useState(retrieve(pageKey + "selected") ?? "laughs");
+
+  const [loading, setLoading] = useState(true);
+  const [tabList, setTabList] = useState();
+  const [selected, setSelected] = useState();
   const [adding, setAdding] = useState(false);
 
+  const setupPage = async () => {
+    setTabList((await retrieve(pageKey + "tabs")) ?? ["laughs", "smiles"]);
+    setSelected((await retrieve(pageKey + "selected")) ?? "laughs");
+    setLoading(false);
+  };
+
   useEffect(() => {
-    store(pageKey + "tabs", tabList);
+    setupPage();
+  }, []);
+
+  useEffect(() => {
+    if (tabList) store(pageKey + "tabs", tabList);
   }, [tabList]);
 
   useEffect(() => {
-    store(pageKey + "selected", selected);
+    if (selected) store(pageKey + "selected", selected);
   }, [selected]);
 
   const handleSelection = (e, newValue) => {
@@ -31,15 +44,20 @@ const TimestampPage = () => {
   };
 
   const handleDelete = (label) => {
-    setTabList((tabs) => {
-      const filtered = tabs.filter((tab) => tab !== label);
-      setSelected(filtered[0] ?? "adder-tab");
-      remove(`${label}/data`);
-      return filtered;
+    setLoading(true);
+    remove(`${label}/data`).then(() => {
+      setTabList((tabs) => {
+        const filtered = tabs.filter((tab) => tab !== label);
+        setSelected(filtered[0] ?? "adder-tab");
+        return filtered;
+      });
+      setLoading(false);
     });
   };
 
-  return (
+  return loading ? (
+    <LoadingCircle />
+  ) : (
     <>
       <Tabs
         value={selected}
@@ -70,7 +88,9 @@ const TimestampPage = () => {
         ))}
         <Tab
           value={"adder-tab"}
-          onClick={() => setAdding(true)}
+          onClick={() => {
+            setAdding(true);
+          }}
           icon={
             <Tooltip title="Add new Tab">
               <IconButton color="primary">

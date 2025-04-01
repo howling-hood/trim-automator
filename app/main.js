@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from "electron";
-
+import { app, BrowserWindow } from "electron/main";
+import path from "node:path";
 import isDev from "electron-is-dev";
+import setupHandlers from "./utils/handlers.js";
 
 const prodEnv = Boolean(process.env.NODE_ENV === "production");
-const isProd = !isDev || prodEnv;
+const isProd = !isDev || prodEnv || app.isPackaged;
 
 const createWindow = () => {
   // Create the browser window.
@@ -14,11 +15,15 @@ const createWindow = () => {
     backgroundColor: "#FFFFFF",
     webPreferences: {
       devTools: true,
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: path.join(path.resolve(), isProd ? "" : "app", "preload.js"),
+      contextIsolation: true
     }
   });
 
-  if (isProd || app.isPackaged) {
+  // console.log("testsasdfsdf", );
+
+  if (isProd) {
     mainWindow.loadFile("ui/index.html");
     mainWindow.webContents.openDevTools();
     return;
@@ -27,7 +32,10 @@ const createWindow = () => {
   mainWindow.loadURL("http://localhost:3030");
   return;
 };
+
 app.whenReady().then(() => {
+  setupHandlers();
+
   createWindow();
 
   app.on("activate", () => {
