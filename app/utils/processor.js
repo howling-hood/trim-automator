@@ -5,11 +5,15 @@ import { retrieveFile } from "./storage.js";
 import { eventList } from "./const.js";
 import { gotoTimecode, performBladeCut } from "./davinci.js";
 
-import { ROUTES } from "../../src/utils/configs.js";
-import { getHMSfromSecs } from "../../src/utils/time.js";
-
 let sendToBrowser = (event, data) => getMainWindow().webContents.send(event, data);
 
+const getHMSfromSecs = (time) => {
+  let totalSecs = parseInt(time) || 0;
+  const hours = Math.floor(totalSecs / 3600);
+  const mins = Math.floor(totalSecs / 60 - hours * 60);
+  const secs = totalSecs % 60;
+  return [hours, mins, secs];
+};
 // gets the H,M,S from seconds passed in the param
 // and converts them to strings with a padded 0
 const getPaddedHMSTime = (timeInSec) =>
@@ -21,7 +25,7 @@ const getPercent = (index, total) => ((parseInt(index) + 1) / total) * 100;
 
 const setupProcess = async (times, id) => {
   sendToBrowser(eventList.onBeginSetup);
-  const settings = await retrieveFile(ROUTES.settings);
+  const settings = await retrieveFile("/settings");
   sendToBrowser(eventList.onEndSetup);
   return { ...settings.davinci };
 };
