@@ -11,16 +11,17 @@ const fileStorage = {
 };
 
 const eventList = {
-  onBeginProcess: "onBeginProcess",
-  onBeginSetup: "onBeginSetup",
-  onEndSetup: "onEndSetup",
-  onBeginTimeConversion: "onBeginTimeConversion",
-  onTimeConversionProgress: "onTimeConversionProgress",
-  onEndTimeConversion: "onEndTimeConversion",
-  onBeginCutPhase: "onBeginCutPhase",
-  onCutPhaseProgress: "onCutPhaseProgress",
-  onEndCutPhase: "onEndCutPhase",
-  onEndProcess: "onEndProcess"
+  eventTrigger: "eventTrigger",
+  onBeginProcess: "Process started",
+  onBeginSetup: "Setup started",
+  onEndSetup: "Setup done",
+  onBeginTimeConversion: "Time Conversion started",
+  onTimeConversionProgress: "Time Conversion Progress:: ",
+  onEndTimeConversion: "Time Conversion Completed",
+  onBeginCutPhase: "Cut Phase started",
+  onCutPhaseProgress: "Cut Phase Progress:: ",
+  onEndCutPhase: "Cut Phase Completed",
+  onEndProcess: "Process Completed"
 };
 
 const keyMapping = {

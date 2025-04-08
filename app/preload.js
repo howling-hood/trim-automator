@@ -13,14 +13,5 @@ contextBridge.exposeInMainWorld("processor", {
 });
 
 contextBridge.exposeInMainWorld("mainEvents", {
-  onBeginProcess: (cb) => ipcRenderer.on(eventList.onBeginProcess, (_, value) => cb(value)),
-  onBeginSetup: (cb) => ipcRenderer.on(eventList.onBeginSetup, (_, value) => cb(value)),
-  onEndSetup: (cb) => ipcRenderer.on(eventList.onEndSetup, (_, value) => cb(value)),
-  onBeginTimeConversion: (cb) => ipcRenderer.on(eventList.onBeginTimeConversion, (_, value) => cb(value)),
-  onTimeConversionProgress: (cb) => ipcRenderer.on(eventList.onTimeConversionProgress, (_, value) => cb(value)),
-  onEndTimeConversion: (cb) => ipcRenderer.on(eventList.onEndTimeConversion, (_, value) => cb(value)),
-  onBeginCutPhase: (cb) => ipcRenderer.on(eventList.onBeginCutPhase, (_, value) => cb(value)),
-  onCutPhaseProgress: (cb) => ipcRenderer.on(eventList.onCutPhaseProgress, (_, value) => cb(value)),
-  onEndCutPhase: (cb) => ipcRenderer.on(eventList.onEndCutPhase, (_, value) => cb(value)),
-  onEndProcess: (cb) => ipcRenderer.on(eventList.onEndProcess, (_, value) => cb(value))
+  eventTrigger: (cb) => ipcRenderer.on(eventList.eventTrigger, (_, value) => cb(value))
 });

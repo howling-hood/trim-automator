@@ -2,10 +2,14 @@ import { dialog } from "electron";
 import { getMainWindow } from "electron-main-window";
 
 import { retrieveFile } from "./storage.js";
-import { eventList } from "./const.js";
+import { eventList, processor } from "./const.js";
 import { switchToDavinci, gotoTimecode, performBladeCut } from "./davinci.js";
 
-let sendToBrowser = (event, data) => getMainWindow().webContents.send(event, data);
+let sendToBrowser = (text, isProgressEvent = false) =>
+  getMainWindow().webContents.send(eventList.eventTrigger, {
+    text,
+    isProgressEvent
+  });
 
 const getHMSfromSecs = (time) => {
   let totalSecs = parseInt(time) || 0;
@@ -21,7 +25,7 @@ const getPaddedHMSTime = (timeInSec) =>
     .map((num) => num.toString().padStart(2, "0"))
     .join("");
 
-const getPercent = (index, total) => ((parseInt(index) + 1) / total) * 100;
+const getPercent = (index, total) => `${Math.floor(((parseInt(index) + 1) / total) * 100)}%`;
 
 const setupProcess = async (times, id) => {
   sendToBrowser(eventList.onBeginSetup);
@@ -37,7 +41,7 @@ const getConvertedTimestrings = (times) => {
   times.forEach((time, index) => {
     const start = time[0];
     const end = time[1];
-    sendToBrowser(eventList.onTimeConversionProgress, getPercent(index, len));
+    sendToBrowser(`${eventList.onTimeConversionProgress} ${getPercent(index, len)}`, true);
     converted.push(`${getPaddedHMSTime(start)}00`);
     converted.push(`${getPaddedHMSTime(end)}00`);
   });
@@ -50,7 +54,7 @@ const beginCuttingPhase = async (times = [], timecode = "=", blade = "CTRL+B") =
   sendToBrowser(eventList.onBeginCutPhase);
   await switchToDavinci();
   for (let i = 0; i < len; i++) {
-    sendToBrowser(eventList.onCutPhaseProgress, getPercent(i, len));
+    sendToBrowser(`${eventList.onCutPhaseProgress} ${getPercent(i, len)}`, true);
     await gotoTimecode(times[i], timecode);
     await performBladeCut(blade);
   }

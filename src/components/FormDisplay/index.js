@@ -68,7 +68,7 @@ const FormDisplay = ({ setIsProcessing }) => {
 
       <br />
       <Button
-        disabled={!(total !== checklist.length || id.trim() === "")}
+        disabled={!(total !== checklist.length)}
         variant="contained"
         onClick={handleSubmit}>
         Begin Process

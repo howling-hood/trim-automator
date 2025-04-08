@@ -8,12 +8,14 @@ import TimeEntry from "../TimeEntry";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/configs";
 import LoadingCircle from "../LoadingCircle";
+import TimestampModal from "../TimestampModal";
 
 const TimeDetails = ({ selected, pageKey }) => {
   const sectionKey = pageKey + "/data";
   const [data, setData] = useState([]);
   const [displayDuration, setDisplayDuration] = useState("00:00:00");
   const [loading, setLoading] = useState(false);
+  const [isJiraModalOpen, setJiraModalOpen] = useState(false);
 
   const setupSection = async () => {
     const data = (await retrieve(sectionKey)) || [];
@@ -61,6 +63,17 @@ const TimeDetails = ({ selected, pageKey }) => {
       hidden={!selected}>
       <Stack spacing={2}>
         <br />
+        <Grid size={12}>
+          <center>
+            <Button
+              variant="contained"
+              color="secondary"
+              size="small"
+              onClick={() => setJiraModalOpen(true)}>
+              get Jira timestamps
+            </Button>
+          </center>
+        </Grid>
         <div>
           <Grid
             container
@@ -136,6 +149,14 @@ const TimeDetails = ({ selected, pageKey }) => {
             />
           ))}
         </div>
+        <TimestampModal
+          isOpen={isJiraModalOpen}
+          setOpen={setJiraModalOpen}
+          onSubmit={(list) => {
+            setData(list);
+            onDataUpdate(list);
+          }}
+        />
       </Stack>
     </div>
   );
