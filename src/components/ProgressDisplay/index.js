@@ -29,12 +29,8 @@ const ProgressDisplay = () => {
     <LoadingCircle />
   ) : (
     <Stack spacing={2}>
-      {current && (
-        <Alert severity="info">
-          {current}
-          <LinearProgress />
-        </Alert>
-      )}
+      {current !== "" && <Alert severity="info">{current}</Alert>}
+      {current !== "" && <LinearProgress value={parseInt(current.split("::").pop().replace("%", ""))} />}
       <Divider />
       {items.map((text, index) => (
         <Alert

@@ -2,8 +2,22 @@ import { dialog } from "electron";
 import { getMainWindow } from "electron-main-window";
 
 import { retrieveFile } from "./storage.js";
-import { eventList, processor } from "./const.js";
-import { switchToDavinci, gotoTimecode, performBladeCut } from "./davinci.js";
+import { eventList } from "./const.js";
+import {
+  switchToDavinci,
+  gotoTimecode,
+  performBladeCut,
+  performSelection,
+  performDeletion,
+  goToRenderPage,
+  setupRender,
+  startRender
+} from "./davinci.js";
+
+const waitFor = async (time) =>
+  new Promise((res) => {
+    setTimeout(res, time * 1000);
+  });
 
 let sendToBrowser = (text, isProgressEvent = false) =>
   getMainWindow().webContents.send(eventList.eventTrigger, {
@@ -23,13 +37,15 @@ const getHMSfromSecs = (time) => {
 const getPaddedHMSTime = (timeInSec) =>
   getHMSfromSecs(timeInSec)
     .map((num) => num.toString().padStart(2, "0"))
-    .join("");
+    .join("")
+    .concat("00");
 
-const getPercent = (index, total) => `${Math.floor(((parseInt(index) + 1) / total) * 100)}%`;
+const getPercent = (index, total) => Math.floor(((parseInt(index) + 1) / total) * 100);
 
 const setupProcess = async (times, id) => {
   sendToBrowser(eventList.onBeginSetup);
   const settings = await retrieveFile("/settings");
+  await switchToDavinci();
   sendToBrowser(eventList.onEndSetup);
   return { ...settings.davinci };
 };
@@ -41,24 +57,70 @@ const getConvertedTimestrings = (times) => {
   times.forEach((time, index) => {
     const start = time[0];
     const end = time[1];
-    sendToBrowser(`${eventList.onTimeConversionProgress} ${getPercent(index, len)}`, true);
-    converted.push(`${getPaddedHMSTime(start)}00`);
-    converted.push(`${getPaddedHMSTime(end)}00`);
+    sendToBrowser(`${eventList.onTimeConversionProgress}::${getPercent(index, len)}%`, true);
+    converted.push(getPaddedHMSTime(start));
+    converted.push(getPaddedHMSTime(end));
   });
   sendToBrowser(eventList.onEndTimeConversion);
   return converted;
 };
 
-const beginCuttingPhase = async (times = [], timecode = "=", blade = "CTRL+B") => {
+const beginCuttingPhase = async (times = [], timecode, blade) => {
   const len = times?.length;
   sendToBrowser(eventList.onBeginCutPhase);
-  await switchToDavinci();
   for (let i = 0; i < len; i++) {
-    sendToBrowser(`${eventList.onCutPhaseProgress} ${getPercent(i, len)}`, true);
+    sendToBrowser(`${eventList.onCutPhaseProgress}::${getPercent(i, len)}%`, true);
     await gotoTimecode(times[i], timecode);
+    await waitFor(0.5);
     await performBladeCut(blade);
   }
   sendToBrowser(eventList.onEndCutPhase);
+};
+
+const beginRemovalPhase = async (times = [], timecode, selectClip, deleteKey) => {
+  const len = times?.length;
+  sendToBrowser(eventList.onBeginRemovePhase);
+  for (let i = 0; i < len; i++) {
+    sendToBrowser(`${eventList.onRemovePhaseProgress}::${getPercent(i, len)}%`, true);
+    await gotoTimecode(times[i], timecode);
+    await waitFor(0.5);
+    await performSelection(selectClip);
+    await waitFor(0.5);
+    await performDeletion(deleteKey);
+  }
+  sendToBrowser(eventList.onEndRemovePhase);
+};
+
+const getMiddleTimeStrings = (times) => {
+  let timecodes = [];
+  // add initial timecode
+  let thisEnd = 0;
+  let nextStart = parseInt(times[0][0]);
+  let midTime = Math.round((thisEnd + nextStart) / 2);
+  timecodes.push(getPaddedHMSTime(midTime));
+  for (let i = 0; i < times.length - 1; i++) {
+    thisEnd = parseInt(times[i][1]);
+    nextStart = parseInt(times[i + 1][0] || thisEnd + 120);
+    midTime = Math.round((thisEnd + nextStart) / 2);
+    timecodes.push(getPaddedHMSTime(midTime));
+  }
+  // adding ending timecode
+  thisEnd = parseInt(times.pop()[1]);
+  nextStart = parseInt(thisEnd + 120);
+  midTime = Math.round((thisEnd + nextStart) / 2);
+  timecodes.push(getPaddedHMSTime(midTime));
+  // returning the reverse of the list
+  return timecodes.reverse();
+};
+
+const beginRenderSetupPhase = async (deliverPage) => {
+  sendToBrowser(eventList.onBeginRenderSetupPhase);
+  await goToRenderPage(deliverPage);
+  await waitFor(2);
+  await setupRender();
+  await waitFor(5);
+  await startRender();
+  sendToBrowser(eventList.onEndRenderSetupPhase);
 };
 
 const mainProcess = async (times) => {
@@ -68,9 +130,12 @@ const mainProcess = async (times) => {
   }
   await new Promise((resolve) => setTimeout(resolve, 1000));
   sendToBrowser(eventList.onBeginProcess);
-  const { timecode, blade } = await setupProcess(times);
-  const timestrings = await getConvertedTimestrings(times);
+  const { timecode, blade, selectClip, deleteKey, deliverPage } = await setupProcess(times);
+  const timestrings = getConvertedTimestrings(times);
   await beginCuttingPhase(timestrings, timecode, blade);
+  const midTimes = getMiddleTimeStrings(times);
+  await beginRemovalPhase(midTimes, timecode, selectClip, deleteKey);
+  await beginRenderSetupPhase(deliverPage);
   sendToBrowser(eventList.onEndProcess);
 };
 

@@ -8,10 +8,11 @@ const ShortcutInput = ({ isOpen, onSubmit }) => {
   const [shortcut, setShortcut] = useState("");
 
   hotkeys("*", { keydown: true, keyup: false }, () => {
+    console.log(hotkeys.getPressedKeyCodes());
     setShortcut(
       hotkeys
         .getPressedKeyString()
-        .map((key) => KEYMAPPING[key] || key)
+        .map((key) => (KEYMAPPING[key] || key).toUpperCase())
         .reverse()
         .join("+")
     );

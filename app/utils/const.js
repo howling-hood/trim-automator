@@ -12,23 +12,29 @@ const fileStorage = {
 
 const eventList = {
   eventTrigger: "eventTrigger",
-  onBeginProcess: "Process started",
-  onBeginSetup: "Setup started",
+  onBeginProcess: "Process Started",
+  onBeginSetup: "Setup Started",
   onEndSetup: "Setup done",
-  onBeginTimeConversion: "Time Conversion started",
-  onTimeConversionProgress: "Time Conversion Progress:: ",
+  onBeginTimeConversion: "Time Conversion Started",
+  onTimeConversionProgress: "Time Conversion Progress",
   onEndTimeConversion: "Time Conversion Completed",
-  onBeginCutPhase: "Cut Phase started",
-  onCutPhaseProgress: "Cut Phase Progress:: ",
+  onBeginCutPhase: "Cut Phase Started",
+  onCutPhaseProgress: "Cut Phase Progress",
   onEndCutPhase: "Cut Phase Completed",
+  onBeginRemovePhase: "Remove Phase Started",
+  onRemovePhaseProgress: "Remove Phase Progress",
+  onEndRemovePhase: "Remove Phase Completed",
+  onBeginRenderSetupPhase: "Render Setup Phase Started",
+  onEndRenderSetupPhase: "Render Setup Phase Completed",
   onEndProcess: "Process Completed"
 };
 
 const keyMapping = {
   CTRL: Key.LeftControl,
-  SHIFT: Key.Shift,
+  SHIFT: Key.LeftShift,
   ALT: Key.LeftAlt,
-  SPACE: Key.Space
+  SPACE: Key.Space,
+  DELETE: Key.Delete
 };
 
 // needs to use the module.exports
