@@ -22,7 +22,7 @@ const clickPointOnScreen = async (x, y) => {
 };
 
 export const switchToDavinci = async () => {
-  await keyboard.type(Key.LeftAlt, Key.Tab);
+  await keyboard.type(process.platform === "darwin" ? Key.LeftCmd : Key.LeftAlt, Key.Tab);
 };
 
 export const gotoTimecode = async (timecode, timecodeShortcut = "=") => {
@@ -42,16 +42,16 @@ export const goToRenderPage = async (deliverPageShortcut = "SHIFT+D") => {
   await keyboard.releaseKey(...getMappedShortcut(deliverPageShortcut));
 };
 
-export const setupRender = async () => {
+export const setupRender = async (presetLocation = [30, 135], addToQueueLocation = [350, 990]) => {
   // Go to preset
-  await clickPointOnScreen(30, 135);
+  await clickPointOnScreen(...presetLocation);
   // Add to Render Queue
-  await clickPointOnScreen(350, 990);
+  await clickPointOnScreen(...addToQueueLocation);
 };
 
-export const startRender = async () => {
+export const startRender = async (replaceLocation = [1100, 610], renderAllLocation = [1835, 400]) => {
   // click replace if popup shows up
-  await clickPointOnScreen(1100, 610);
+  await clickPointOnScreen(...replaceLocation);
   // click on render all
-  await clickPointOnScreen(1835, 400);
+  await clickPointOnScreen(...renderAllLocation);
 };

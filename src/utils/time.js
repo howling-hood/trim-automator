@@ -1,4 +1,5 @@
-import { SETTINGS } from "./configs.js";
+import { ROUTES, SETTINGS } from "./configs.js";
+import { retrieveLocal } from "./storage.js";
 
 const secsInHours = 60 * 60;
 const secsInMins = 60;
@@ -8,6 +9,7 @@ export const calculateTotalDuration = (timeArray = []) => {
 };
 
 export const timeReduction = (times = []) => {
+  const threshold = parseInt(retrieveLocal(ROUTES.settings)?.threshold ?? SETTINGS.threshold);
   const sortedTimes = times.sort((a, b) => a[0] - b[0]);
   let newTimes = [];
   let mergedTill = -1;
@@ -25,7 +27,7 @@ export const timeReduction = (times = []) => {
     for (let secondary = primary + 1; secondary < sortedTimes.length; secondary++) {
       if (
         // if the current end time is near threshold secs of start time of next entry merge it
-        getTimeDifference(entryEnd, sortedTimes[secondary][0]) <= SETTINGS.threshold
+        getTimeDifference(entryEnd, sortedTimes[secondary][0]) <= threshold
       ) {
         entryEnd = sortedTimes[secondary][1];
         mergedTill = secondary;

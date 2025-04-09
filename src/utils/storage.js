@@ -5,6 +5,11 @@ export const retrieve = async (key) => {
   return (await window?.fileStorage?.retrieveFile(key)) ?? JSON.parse(localStorage.getItem(key));
 };
 
+export const retrieveLocal = (key) => {
+  if (!key) throw Error("Key needed for retrieval");
+  return JSON.parse(localStorage.getItem(key));
+};
+
 export const store = async (key, value) => {
   if (!key) throw Error("Key needed for storage");
   if (!value) throw Error("Value/Data needed for storage");

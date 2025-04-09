@@ -1,24 +1,15 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
-import hotkeys from "hotkeys-js";
 import { Button, Modal, Paper, Stack, Typography } from "@mui/material";
-import { KEYMAPPING } from "../../utils/configs";
 
-const ShortcutInput = ({ isOpen, onSubmit }) => {
-  const [shortcut, setShortcut] = useState("");
+const ScreenPointInput = ({ isOpen, onSubmit }) => {
+  const [point, setPoint] = useState({});
 
   useEffect(() => {
-    hotkeys("*", { keydown: true, keyup: false }, () => {
-      setShortcut(
-        hotkeys
-          .getPressedKeyString()
-          .map((key) => (KEYMAPPING[key] || key).toUpperCase())
-          .reverse()
-          .join("+")
-      );
-    });
-    return () => hotkeys.unbind();
-  }, []);
+    window.onblur = isOpen ? handleSelection : null;
+  }, [isOpen]);
+
+  const handleSelection = () => window.mouseEvents.getMousePosition().then(setPoint);
 
   return (
     <Modal
@@ -40,28 +31,35 @@ const ShortcutInput = ({ isOpen, onSubmit }) => {
             <Typography
               variant="h6"
               color="info">
-              {shortcut || "Enter a shortcut"}
+              Click on the desired location
+            </Typography>
+            <Typography
+              variant="h6"
+              color="info">
+              {[point?.x ?? "-", point?.y ?? "-"].join(",")}
             </Typography>
             <Stack
               spacing={5}
               direction="row">
               <Button
-                disabled={!shortcut}
+                disabled={!point.x}
                 size="large"
                 onClick={() => {
-                  onSubmit(shortcut);
-                  setShortcut("");
+                  onSubmit([point.x, point.y]);
+                  setPoint({});
                 }}
                 variant="contained"
                 color="success">
                 Submit
               </Button>
               <Button
-                disabled={!shortcut}
+                disabled={!point.x}
                 size="large"
+                onClick={() => {
+                  setPoint({});
+                }}
                 variant="contained"
-                color="warning"
-                onClick={() => setShortcut("")}>
+                color="error">
                 Clear
               </Button>
             </Stack>
@@ -73,4 +71,4 @@ const ShortcutInput = ({ isOpen, onSubmit }) => {
   );
 };
 
-export default ShortcutInput;
+export default ScreenPointInput;

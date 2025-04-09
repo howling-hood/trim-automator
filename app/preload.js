@@ -1,6 +1,6 @@
 const { contextBridge, ipcRenderer } = require("electron/renderer");
 
-const { fileStorage, eventList, processor } = require("./utils/const.js");
+const { fileStorage, eventList, processor, mouse } = require("./utils/const.js");
 
 contextBridge.exposeInMainWorld("fileStorage", {
   clearFile: (key) => ipcRenderer.invoke(fileStorage.clearFile, key),
@@ -14,4 +14,8 @@ contextBridge.exposeInMainWorld("processor", {
 
 contextBridge.exposeInMainWorld("mainEvents", {
   eventTrigger: (cb) => ipcRenderer.on(eventList.eventTrigger, (_, value) => cb(value))
+});
+
+contextBridge.exposeInMainWorld("mouseEvents", {
+  getMousePosition: () => ipcRenderer.invoke(mouse.getMousePosition)
 });

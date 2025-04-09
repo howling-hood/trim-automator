@@ -32,9 +32,14 @@ const eventList = {
 const keyMapping = {
   CTRL: Key.LeftControl,
   SHIFT: Key.LeftShift,
-  ALT: Key.LeftAlt,
+  ALT: process.platform === "darwin" ? Key.LeftCmd : Key.LeftAlt,
   SPACE: Key.Space,
-  DELETE: Key.Delete
+  DELETE: Key.Delete,
+  "=": Key.Equal
+};
+
+const mouse = {
+  getMousePosition: "mouse:getMousePosition"
 };
 
 // needs to use the module.exports
@@ -42,5 +47,6 @@ module.exports = {
   fileStorage,
   eventList,
   processor,
-  keyMapping
+  keyMapping,
+  mouse
 };

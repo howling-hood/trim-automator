@@ -42,12 +42,12 @@ const getPaddedHMSTime = (timeInSec) =>
 
 const getPercent = (index, total) => Math.floor(((parseInt(index) + 1) / total) * 100);
 
-const setupProcess = async (times, id) => {
+const setupProcess = async () => {
   sendToBrowser(eventList.onBeginSetup);
   const settings = await retrieveFile("/settings");
   await switchToDavinci();
   sendToBrowser(eventList.onEndSetup);
-  return { ...settings.davinci };
+  return { ...settings.davinci, ...settings.mousePoints };
 };
 
 const getConvertedTimestrings = (times) => {
@@ -71,7 +71,7 @@ const beginCuttingPhase = async (times = [], timecode, blade) => {
   for (let i = 0; i < len; i++) {
     sendToBrowser(`${eventList.onCutPhaseProgress}::${getPercent(i, len)}%`, true);
     await gotoTimecode(times[i], timecode);
-    await waitFor(0.5);
+    await waitFor(1);
     await performBladeCut(blade);
   }
   sendToBrowser(eventList.onEndCutPhase);
@@ -113,13 +113,19 @@ const getMiddleTimeStrings = (times) => {
   return timecodes.reverse();
 };
 
-const beginRenderSetupPhase = async (deliverPage) => {
+const beginRenderSetupPhase = async (
+  deliverPage,
+  presetLocation,
+  addToQueueLocation,
+  replaceLocation,
+  renderAllLocation
+) => {
   sendToBrowser(eventList.onBeginRenderSetupPhase);
   await goToRenderPage(deliverPage);
   await waitFor(2);
-  await setupRender();
+  await setupRender(presetLocation, addToQueueLocation);
   await waitFor(5);
-  await startRender();
+  await startRender(replaceLocation, renderAllLocation);
   sendToBrowser(eventList.onEndRenderSetupPhase);
 };
 
@@ -130,12 +136,22 @@ const mainProcess = async (times) => {
   }
   await new Promise((resolve) => setTimeout(resolve, 1000));
   sendToBrowser(eventList.onBeginProcess);
-  const { timecode, blade, selectClip, deleteKey, deliverPage } = await setupProcess(times);
+  const {
+    timecode,
+    blade,
+    selectClip,
+    deleteKey,
+    deliverPage,
+    presetLocation,
+    addToQueueLocation,
+    replaceLocation,
+    renderAllLocation
+  } = await setupProcess(times);
   const timestrings = getConvertedTimestrings(times);
   await beginCuttingPhase(timestrings, timecode, blade);
   const midTimes = getMiddleTimeStrings(times);
   await beginRemovalPhase(midTimes, timecode, selectClip, deleteKey);
-  await beginRenderSetupPhase(deliverPage);
+  await beginRenderSetupPhase(deliverPage, presetLocation, addToQueueLocation, replaceLocation, renderAllLocation);
   sendToBrowser(eventList.onEndProcess);
 };
 
