@@ -53,14 +53,14 @@ const SettingsPage = () => {
           setThreshold(thres);
         }}
       />
-      {Object.entries(davinci).map((davinciItem) => (
+      {Object.entries(DAVINCI_LABELS).map(([id, label]) => (
         <TextField
-          key={davinciItem[0]}
-          label={DAVINCI_LABELS[davinciItem[0]]}
+          key={id}
+          label={label}
           variant="filled"
-          value={davinciItem[1]}
+          value={davinci[id]}
           onClick={() => {
-            setListener(davinciItem[0]);
+            setListener(id);
           }}
         />
       ))}
