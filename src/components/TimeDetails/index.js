@@ -153,7 +153,7 @@ const TimeDetails = ({ selected, pageKey }) => {
           isOpen={isJiraModalOpen}
           setOpen={setJiraModalOpen}
           onSubmit={(list) => {
-            setData(list);
+            setData(() => list);
             onDataUpdate(list);
           }}
         />

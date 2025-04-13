@@ -70,6 +70,7 @@ const beginCuttingPhase = async (times = [], timecode, blade) => {
   sendToBrowser(eventList.onBeginCutPhase);
   for (let i = 0; i < len; i++) {
     sendToBrowser(`${eventList.onCutPhaseProgress}::${getPercent(i, len)}%`, true);
+    await waitFor(1);
     await gotoTimecode(times[i], timecode);
     await waitFor(1);
     await performBladeCut(blade);

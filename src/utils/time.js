@@ -5,7 +5,9 @@ const secsInHours = 60 * 60;
 const secsInMins = 60;
 
 export const calculateTotalDuration = (timeArray = []) => {
-  return getHMSfromSecs(timeArray.reduce((total, curr) => total + getTimeDifference(...curr), 0)).join(":");
+  return getHMSfromSecs(timeArray.reduce((total, curr) => total + getTimeDifference(...curr), 0))
+    .map((num) => `${num}`.padStart(2, "0"))
+    .join(":");
 };
 
 export const timeReduction = (times = []) => {

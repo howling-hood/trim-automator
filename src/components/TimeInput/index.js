@@ -52,7 +52,7 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
             Hours
           </Typography>
           <input
-            value={hours}
+            value={`${hours}`.padStart(2, "0")}
             onChange={(e) => {
               handleInput(e, setHours, 1);
             }}
@@ -69,7 +69,7 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
             Mins
           </Typography>
           <input
-            value={minutes}
+            value={`${minutes}`.padStart(2, "0")}
             onChange={(e) => {
               handleInput(e, setMinutes, 2);
             }}
@@ -85,7 +85,7 @@ const TimeInput = ({ disabled, handleChange, value: timecode = 0 }) => {
             Secs
           </Typography>
           <input
-            value={seconds}
+            value={`${seconds}`.padStart(2, "0")}
             onChange={(e) => {
               handleInput(e, setSeconds, null);
             }}

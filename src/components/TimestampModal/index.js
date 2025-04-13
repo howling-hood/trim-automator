@@ -14,9 +14,9 @@ const TimestampModal = ({ isOpen, setOpen, onSubmit }) => {
       return;
     }
     let times = [];
-    let entry = timestamps.split("\n");
+    let entry = timestamps.replaceAll(";", ":").split("\n");
     let validTimeStrings = entry
-      .filter((item) => item.includes(":") && item.includes(":"))
+      .filter((item) => item.includes(":") && item.includes("-"))
       .map((item) => item.split("-"));
     for (let time of validTimeStrings) {
       let start = time[0].split(":");
