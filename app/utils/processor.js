@@ -114,23 +114,22 @@ const getMiddleTimeStrings = (times) => {
   return timecodes.reverse();
 };
 
-const beginRenderSetupPhase = async (
-  deliverPage,
-  presetLocation,
-  addToQueueLocation,
-  replaceLocation,
-  renderAllLocation
-) => {
+const beginRenderSetupPhase = async (deliverPage, presetLocation, addToQueueLocation) => {
   sendToBrowser(eventList.onBeginRenderSetupPhase);
   await goToRenderPage(deliverPage);
   await waitFor(2);
   await setupRender(presetLocation, addToQueueLocation);
-  await waitFor(5);
-  await startRender(replaceLocation, renderAllLocation);
   sendToBrowser(eventList.onEndRenderSetupPhase);
 };
 
-const mainProcess = async (times) => {
+const renderStart = async (replaceLocation, renderAllLocation) => {
+  sendToBrowser(eventList.onBeginRender);
+  await waitFor(5);
+  await startRender(replaceLocation, renderAllLocation);
+  sendToBrowser(eventList.onEndRender);
+};
+
+const mainProcess = async (times, toRun) => {
   if (!sendToBrowser) {
     dialog.showErrorBox("Error", "Something went wrong");
     return;
@@ -149,10 +148,19 @@ const mainProcess = async (times) => {
     renderAllLocation
   } = await setupProcess(times);
   const timestrings = getConvertedTimestrings(times);
-  await beginCuttingPhase(timestrings, timecode, blade);
+  if (toRun.cut) {
+    await beginCuttingPhase(timestrings, timecode, blade);
+  }
   const midTimes = getMiddleTimeStrings(times);
-  await beginRemovalPhase(midTimes, timecode, selectClip, deleteKey);
-  await beginRenderSetupPhase(deliverPage, presetLocation, addToQueueLocation, replaceLocation, renderAllLocation);
+  if (toRun.remove) {
+    await beginRemovalPhase(midTimes, timecode, selectClip, deleteKey);
+  }
+  if (toRun.queue) {
+    await beginRenderSetupPhase(deliverPage, presetLocation, addToQueueLocation);
+  }
+  if (toRun.render) {
+    renderStart(replaceLocation, renderAllLocation);
+  }
   sendToBrowser(eventList.onEndProcess);
 };
 

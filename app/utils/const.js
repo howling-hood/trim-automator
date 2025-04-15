@@ -26,6 +26,8 @@ const eventList = {
   onEndRemovePhase: "Remove Phase Completed",
   onBeginRenderSetupPhase: "Render Setup Phase Started",
   onEndRenderSetupPhase: "Render Setup Phase Completed",
+  onBeginRender: "Rendering Started",
+  onEndRender: "Rendering Ongoing",
   onEndProcess: "Process Completed"
 };
 

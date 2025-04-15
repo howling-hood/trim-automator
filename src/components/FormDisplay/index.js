@@ -4,19 +4,15 @@ import { retrieve } from "../../utils/storage";
 import { Button, Checkbox, FormControlLabel, FormGroup, Stack, TextField, Typography } from "@mui/material";
 import LoadingCircle from "../LoadingCircle";
 
-const checklist = [
-  "Do the shortcuts in Davinci Resolve and this app match?",
-  "Is Davinci Resolve open and maximised?",
-  "Is the Correct timeline loaded in?",
-  "Did you select Davinci Resolve before coming to this app?",
-  "If this process was stopped did you undo all the changes?"
-];
-
 const FormDisplay = ({ setIsProcessing }) => {
   const [selectedTab, setSelectedTab] = useState("");
   const [times, setTimes] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [id, setId] = useState("");
+  const [processes, setProcesses] = useState({
+    cut: true,
+    remove: true,
+    queue: true,
+    render: true
+  });
   const [loading, setLoading] = useState(true);
 
   const setupSection = async () => {
@@ -32,7 +28,7 @@ const FormDisplay = ({ setIsProcessing }) => {
 
   const handleSubmit = async () => {
     setIsProcessing(true);
-    window.processor.initiate(times);
+    window.processor.initiate(times, processes);
   };
 
   return loading ? (
@@ -42,33 +38,48 @@ const FormDisplay = ({ setIsProcessing }) => {
       <Typography
         variant="h6"
         color="info">
-        Checklist before using the `{selectedTab}` Timestamps
+        Set the process to run on for the `{selectedTab}` Timestamps
       </Typography>
       <FormGroup>
-        {checklist.map((item) => (
-          <FormControlLabel
-            control={
-              <Checkbox
-                onChange={(e) => {
-                  setTotal((t) => (e.target.checked ? ++t : --t));
-                }}
-              />
-            }
-            key={item}
-            label={item}
-          />
-        ))}
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={processes["cut"]}
+              onChange={(e) => setProcesses({ ...processes, ["cut"]: e.target.checked })}
+            />
+          }
+          label="Blade Cut timecodes"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={processes["remove"]}
+              onChange={(e) => setProcesses({ ...processes, ["remove"]: e.target.checked })}
+            />
+          }
+          label="Remove Unwanted clips"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={processes["queue"]}
+              onChange={(e) => setProcesses({ ...processes, ["queue"]: e.target.checked })}
+            />
+          }
+          label="Add to queue"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={processes["render"]}
+              onChange={(e) => setProcesses({ ...processes, ["render"]: e.target.checked })}
+            />
+          }
+          label="Start Render Process"
+        />
       </FormGroup>
       <br />
-      <TextField
-        label="Jira ticket id"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
-      />
-
-      <br />
       <Button
-        disabled={!(total !== checklist.length)}
         variant="contained"
         onClick={handleSubmit}>
         Begin Process

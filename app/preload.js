@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld("fileStorage", {
 });
 
 contextBridge.exposeInMainWorld("processor", {
-  initiate: (times) => ipcRenderer.invoke(processor.initiate, times)
+  initiate: (times, toRun) => ipcRenderer.invoke(processor.initiate, times, toRun)
 });
 
 contextBridge.exposeInMainWorld("mainEvents", {
